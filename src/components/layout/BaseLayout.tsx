@@ -16,4 +16,3 @@ const BaseLayout: FunctionComponent = ({children}) => {
 }
 
 export default BaseLayout;
-
