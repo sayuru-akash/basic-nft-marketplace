@@ -20,6 +20,10 @@
       "@components/": ["./src/components/"],
       "@ui/": ["./src/components/ui/"],
       "@ui/*": ["./src/components/ui/*"],
+      "@providers/": ["./src/components/providers/"],
+      "@providers/*": ["./src/components/providers/*"],
+      "@hooks/": ["./src/components/hooks/"],
+      "@hooks/*": ["./src/components/hooks/*"],
       "@nft_types/*": ["./types/*"]
     }
   },
