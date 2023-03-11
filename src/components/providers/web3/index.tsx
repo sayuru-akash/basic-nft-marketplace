@@ -9,9 +9,11 @@ import {
   createDefaultState,
   Web3State,
   loadContract,
+  createWeb3State,
 } from "@providers/web3/utils";
 import { BrowserProvider } from "ethers";
 
+const CONTRACT_NAME = process.env.NEXT_PUBLIC_CONTRACT_NAME;
 const Web3Context = createContext<Web3State>(createDefaultState());
 
 interface Web3ProviderProps {
@@ -24,17 +26,18 @@ const Web3Provider: FunctionComponent<Web3ProviderProps> = ({ children }) => {
   useEffect(() => {
     async function initWeb3() {
       const provider = new BrowserProvider(window.ethereum as any);
-      const CONTRACT_NAME = process.env.NEXT_PUBLIC_CONTRACT_NAME;
 
       // @ts-ignore
       const contract = await loadContract(CONTRACT_NAME, provider);
 
-      setWeb3Api({
-        ethereum: window.ethereum,
-        provider: provider,
-        contract: contract,
-        isLoading: false,
-      });
+      setWeb3Api(
+        createWeb3State({
+          ethereum: window.ethereum,
+          provider,
+          contract,
+          isLoading: false,
+        })
+      );
     }
 
     initWeb3();
@@ -51,6 +54,11 @@ export function useWeb3() {
     throw new Error("useWeb3 must be used within a Web3Provider");
   }
   return context;
+}
+
+export function useWeb3Hooks() {
+  const { hooks } = useWeb3();
+  return hooks;
 }
 
 export default Web3Provider;

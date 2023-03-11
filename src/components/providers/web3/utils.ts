@@ -1,5 +1,7 @@
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { Contract, BrowserProvider, ethers } from "ethers";
+import { setupHooks, Web3Hooks } from "@hooks/web3/setupHooks";
+import { Web3Deps } from "@nft_types/hooks";
 
 declare global {
   interface Window {
@@ -7,15 +9,14 @@ declare global {
   }
 }
 
-export type Web3Params = {
-  contract: Contract | null;
-  ethereum: MetaMaskInpageProvider | null;
-  provider: BrowserProvider | null;
+type Nullable<T> = {
+  [P in keyof T]: T[P] | null;
 };
 
 export type Web3State = {
   isLoading: boolean; // true if the web3 provider is loading
-} & Web3Params;
+  hooks: Web3Hooks;
+} & Nullable<Web3Deps>;
 
 export const createDefaultState = () => {
   return {
@@ -23,6 +24,22 @@ export const createDefaultState = () => {
     contract: null,
     provider: null,
     isLoading: true,
+    hooks: setupHooks({} as any),
+  };
+};
+
+export const createWeb3State = ({
+  ethereum,
+  provider,
+  contract,
+  isLoading,
+}: Web3Deps & { isLoading: boolean }) => {
+  return {
+    ethereum,
+    contract,
+    provider,
+    isLoading,
+    hooks: setupHooks({ ethereum, provider, contract }),
   };
 };
 
