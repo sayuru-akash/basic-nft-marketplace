@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ethersproject/providers": "^5.7.2",
     "@headlessui/react": "^1.7.10",
     "@heroicons/react": "^2.0.15",
     "@metamask/providers": "^10.2.1",
@@ -21,7 +20,7 @@
     "@types/react-dom": "18.0.10",
     "eslint": "8.34.0",
     "eslint-config-next": "13.1.6",
-    "ethers": "^6.0.8",
+    "ethers": "^6.1.0",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",

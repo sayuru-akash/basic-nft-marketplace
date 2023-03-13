@@ -13,7 +13,7 @@ export type CryptoHookFactory<D = any, P = any> = {
 };
 
 export type CryptoHandlerHook<D = any, P = any> = (
-  params: string
+  params?: string
 ) => CryptoSWRResponse<D>;
 
 export type CryptoSWRResponse<D = any> = SWRResponse<D>;
