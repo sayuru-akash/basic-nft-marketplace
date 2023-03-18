@@ -1,16 +1,11 @@
-import { CryptoHookFactory } from "@nft_types/hooks";
-import useSWR from "swr";
+import { useWeb3Hooks } from "@providers/web3";
 
-type AccountHookFactory = CryptoHookFactory<string>;
 
-export type UseAccountHook = ReturnType<AccountHookFactory>;
+export const useAccount = () => {
+  const hooks = useWeb3Hooks();
+  const swrRes = hooks.useAccount();
 
-export const hookFactory: AccountHookFactory =
-  ({ provider }) =>
-  (params) => {
-    const swrRes = useSWR(provider ? "web3/useAccount" : null, () => {
-      return "Test User";
-    });
-
-    return swrRes;
-  };
+  return {
+    account: swrRes
+  }
+}

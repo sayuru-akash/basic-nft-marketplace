@@ -24,7 +24,7 @@ export const createDefaultState = () => {
     contract: null,
     provider: null,
     isLoading: true,
-    hooks: setupHooks({} as any),
+    hooks: setupHooks({isLoading : true} as any),
   };
 };
 
@@ -33,13 +33,13 @@ export const createWeb3State = ({
   provider,
   contract,
   isLoading,
-}: Web3Deps & { isLoading: boolean }) => {
+}: Web3Deps) => {
   return {
     ethereum,
     contract,
     provider,
     isLoading,
-    hooks: setupHooks({ ethereum, provider, contract }),
+    hooks: setupHooks({ ethereum, provider, contract, isLoading }),
   };
 };
 

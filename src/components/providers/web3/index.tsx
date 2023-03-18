@@ -25,22 +25,30 @@ const Web3Provider: FunctionComponent<Web3ProviderProps> = ({ children }) => {
 
   useEffect(() => {
     async function initWeb3() {
-      const provider = new BrowserProvider(window.ethereum as any);
+      try {
+        const provider = new BrowserProvider(window.ethereum as any);
+        // @ts-ignore
+        const contract = await loadContract(CONTRACT_NAME, provider);
 
-      // @ts-ignore
-      const contract = await loadContract(CONTRACT_NAME, provider);
-
-      setWeb3Api(
-        createWeb3State({
-          ethereum: window.ethereum,
-          provider,
-          contract,
-          isLoading: false,
-        })
-      );
+        setWeb3Api(
+          createWeb3State({
+            ethereum: window.ethereum,
+            provider,
+            contract,
+            isLoading: false,
+          })
+        );
+      } catch (e: any) {
+        console.error("Please install Metamask: ", e);
+        setWeb3Api((web3Api) =>
+          createWeb3State({
+            ...(web3Api as any),
+            isLoading: false,
+          })
+        );
+      }
     }
-
-    initWeb3();
+    initWeb3().then((r) => console.log("Init Web3: ", r));
   }, []);
 
   return (

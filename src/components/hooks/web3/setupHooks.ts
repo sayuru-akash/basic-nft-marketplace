@@ -2,7 +2,7 @@ import { Web3Deps } from "@nft_types/hooks";
 import {
   hookFactory as createAccountHook,
   UseAccountHook,
-} from "@hooks/web3/useAccount";
+} from "./useAccount";
 
 export type Web3Hooks = {
   useAccount: UseAccountHook;
