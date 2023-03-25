@@ -6,14 +6,15 @@ type UseAccountResponse = {
   connect: () => void;
   isLoading: boolean;
   isInstalled: boolean;
-}
+};
 
-type AccountHookFactory = CryptoHookFactory<string, UseAccountResponse>
+type AccountHookFactory = CryptoHookFactory<string, UseAccountResponse>;
 
-export type UseAccountHook = ReturnType<AccountHookFactory>
+export type UseAccountHook = ReturnType<AccountHookFactory>;
 
 // @ts-ignore
-export const hookFactory: AccountHookFactory = ({provider, ethereum, isLoading}) =>
+export const hookFactory: AccountHookFactory =
+  ({ provider, ethereum, isLoading }) =>
   // @ts-ignore
   () => {
     const { data, mutate, isValidating, ...swr } = useSWR(
@@ -27,8 +28,10 @@ export const hookFactory: AccountHookFactory = ({provider, ethereum, isLoading})
         }
 
         return account;
-      }, {
-        revalidateOnFocus: false
+      },
+      {
+        revalidateOnFocus: false,
+        shouldRetryOnError: false,
       }
     );
 
@@ -43,10 +46,11 @@ export const hookFactory: AccountHookFactory = ({provider, ethereum, isLoading})
       const accounts = args[0] as string[];
       if (accounts.length === 0) {
         console.error("No accounts found! Please, connect to web3 wallet.");
-      } else { // @ts-ignore
+      } else {
+        // @ts-ignore
         if (accounts[0] !== data) {
           // @ts-ignore
-          mutate(accounts[0]).then(r => console.log(r));
+          mutate(accounts[0]).then((r) => console.log(r));
         }
       }
     };
@@ -63,9 +67,9 @@ export const hookFactory: AccountHookFactory = ({provider, ethereum, isLoading})
       ...swr,
       data,
       isValidating,
-      isLoading: isLoading || isValidating,
+      isLoading: isLoading as boolean,
       isInstalled: !!ethereum?.isMetaMask || false,
       mutate,
-      connect
+      connect,
     };
-}
+  };
