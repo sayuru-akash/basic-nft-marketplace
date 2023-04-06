@@ -11,8 +11,9 @@ import {
   loadContract,
   createWeb3State,
 } from "@providers/web3/utils";
-import { BrowserProvider } from "ethers";
+import { ethers } from "ethers";
 import { MetaMaskInpageProvider } from "@metamask/providers";
+import { NftMarketContract } from "@nft_types/nftMarketContract";
 
 const pageReload = () => {
   window.location.reload();
@@ -50,16 +51,21 @@ const Web3Provider: FunctionComponent<Web3ProviderProps> = ({ children }) => {
   useEffect(() => {
     async function initWeb3() {
       try {
-        const provider = new BrowserProvider(window.ethereum as any);
+        const provider = new ethers.providers.Web3Provider(
+          window.ethereum as any
+        );
         // @ts-ignore
         const contract = await loadContract(CONTRACT_NAME, provider);
+
+        const signer = provider.getSigner();
+        const signedContract = contract.connect(signer);
 
         setGlobalListeners(window.ethereum);
         setWeb3Api(
           createWeb3State({
             ethereum: window.ethereum,
             provider,
-            contract,
+            contract: signedContract as unknown as NftMarketContract,
             isLoading: false,
           })
         );

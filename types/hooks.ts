@@ -1,15 +1,16 @@
-import { BrowserProvider, Contract } from "ethers";
+import { ethers } from "ethers";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { SWRResponse } from "swr";
+import { NftMarketContract } from "@nft_types/nftMarketContract";
 
 export type Web3Deps = {
-  provider: BrowserProvider;
-  contract: Contract;
+  provider: ethers.providers.Web3Provider;
+  contract: NftMarketContract;
   ethereum: MetaMaskInpageProvider;
   isLoading: boolean;
 };
 
-export type CryptoHookFactory<D = any, R= any, P = any> = {
+export type CryptoHookFactory<D = any, R = any, P = any> = {
   (d: Partial<Web3Deps>): CryptoHandlerHook<D, R, P>;
 };
 

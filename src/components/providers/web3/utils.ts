@@ -24,7 +24,7 @@ export const createDefaultState = () => {
     contract: null,
     provider: null,
     isLoading: true,
-    hooks: setupHooks({isLoading : true} as any),
+    hooks: setupHooks({ isLoading: true } as any),
   };
 };
 

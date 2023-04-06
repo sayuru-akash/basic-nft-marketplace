@@ -1,16 +1,17 @@
 import { FunctionComponent } from "react";
-import { NftMeta } from "../../../../../types/nft";
+import { Nft } from "@nft_types/nft";
 
 type NftItemProps = {
-  nft: NftMeta;
+  nft: Nft;
+  buyNft: (token: number, value: number) => Promise<void>;
 };
-const NftItem: FunctionComponent<NftItemProps> = ({ nft }) => {
+const NftItem: FunctionComponent<NftItemProps> = ({ nft, buyNft }) => {
   return (
     <>
       <div className="flex-shrink-0">
         <img
           className={`h-full w-full object-cover`}
-          src={nft.image}
+          src={nft.meta.image}
           alt="New NFT"
         />
       </div>
@@ -18,9 +19,11 @@ const NftItem: FunctionComponent<NftItemProps> = ({ nft }) => {
         <div className="flex-1">
           <p className="text-sm font-medium text-indigo-600">Creatures NFT</p>
           <div className="block mt-2">
-            <p className="text-xl font-semibold text-gray-900">{nft.name}</p>
+            <p className="text-xl font-semibold text-gray-900">
+              {nft.meta.name}
+            </p>
             <p className="mt-3 mb-3 text-base text-gray-500">
-              {nft.description}
+              {nft.meta.description}
             </p>
           </div>
         </div>
@@ -32,13 +35,13 @@ const NftItem: FunctionComponent<NftItemProps> = ({ nft }) => {
               </dt>
               <dd className="order-1 text-xl font-extrabold text-indigo-600">
                 <div className="flex justify-center items-center">
-                  100
+                  {nft.price}
                   <img className="h-6" src="/images/small-eth.webp" />
                   ETH
                 </div>
               </dd>
             </div>
-            {nft.attributes.map((attribute) => (
+            {nft.meta.attributes.map((attribute) => (
               <div
                 key={attribute.trait_type}
                 className="flex flex-col px-4 pt-4"
@@ -55,6 +58,9 @@ const NftItem: FunctionComponent<NftItemProps> = ({ nft }) => {
         </div>
         <div>
           <button
+            onClick={() => {
+              buyNft(nft.tokenId, nft.price);
+            }}
             type="button"
             className="disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none disabled:cursor-not-allowed mr-2 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
