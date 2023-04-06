@@ -12,13 +12,14 @@ const NETWORKS: { [k: string]: string } = {
   11155111: "SEPOLIA",
 };
 
-const targetId = process.env.NEXT_PUBLIC_TARGET_NETWORK_ID as string;
+const targetId = process.env.NEXT_PUBLIC_TARGET_CHAIN_ID as string;
 const targetNetwork = NETWORKS[targetId!];
 
 type UseNetworkResponse = {
   isLoading: boolean;
   isSupported: boolean;
   targetNetwork: string;
+  isConnectedToNetwork: boolean;
 };
 
 type NetworkHookFactory = CryptoHookFactory<string, UseNetworkResponse>;
@@ -46,12 +47,15 @@ export const hookFactory: NetworkHookFactory =
       }
     );
 
+    const isSupported = data === targetNetwork;
+
     return {
       ...swr,
       data,
       isValidating,
       targetNetwork,
-      isSupported: data === targetNetwork,
+      isSupported,
+      isConnectedToNetwork: !isLoading && isSupported,
       isLoading: isLoading as boolean,
     };
   };

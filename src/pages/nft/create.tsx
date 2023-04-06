@@ -9,11 +9,15 @@ import { NftMeta, PinataRes } from "@nft_types/nft";
 import axios from "axios";
 import { useWeb3 } from "@providers/web3";
 import { ethers } from "ethers";
+import { toast } from "react-toastify";
+import { useNetwork } from "@hooks/web3";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 
 const ALLOWED_FIELDS = ["name", "description", "image", "attributes"];
 
 const NftCreate: NextPage = () => {
   const { ethereum, contract } = useWeb3();
+  const { network } = useNetwork();
   const [nftURI, setNftURI] = useState("");
   const [price, setPrice] = useState(0);
   const [hasURI, setHasURI] = useState(false);
@@ -58,12 +62,18 @@ const NftCreate: NextPage = () => {
     const bytes = new Uint8Array(buffer);
     try {
       const { signedData, account } = await getSignedData();
-      const res = await axios.post("../../api/verify-image", {
+      const promise = axios.post("../../api/verify-image", {
         address: account,
         signature: signedData,
         bytes,
         contentType: file.type,
         fileName: file.name.replace(/\.[^/.]+$/, ""),
+      });
+
+      const res = await toast.promise(promise, {
+        pending: "Uploading image",
+        success: "Image uploaded",
+        error: "Image upload error",
       });
 
       const data = res.data as PinataRes;
@@ -101,10 +111,16 @@ const NftCreate: NextPage = () => {
     try {
       const { signedData, account } = await getSignedData();
 
-      const res = await axios.post("../../api/verify", {
+      const promise = axios.post("../../api/verify", {
         address: account,
         signature: signedData,
         nft: nftMeta,
+      });
+
+      const res = await toast.promise(promise, {
+        pending: "Uploading metadata",
+        success: "Metadata uploaded",
+        error: "Metadata upload error",
       });
 
       const data = res.data as PinataRes;
@@ -137,12 +153,44 @@ const NftCreate: NextPage = () => {
         }
       );
 
-      await tx?.wait();
-      alert("NFT created successfully");
+      await toast.promise(tx!.wait(), {
+        pending: "Minting NFT",
+        success: "NFT minted",
+        error: "NFT minting error",
+      });
     } catch (e: any) {
       console.error(e.message);
     }
   };
+
+  if (!network.isConnectedToNetwork) {
+    return (
+      <BaseLayout>
+        <div className="rounded-md bg-yellow-50 p-4 mt-10">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <ExclamationTriangleIcon
+                className="h-5 w-5 text-yellow-400"
+                aria-hidden="true"
+              />
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-yellow-800">
+                Attention needed
+              </h3>
+              <div className="mt-2 text-sm text-yellow-700">
+                <p>
+                  {network.isLoading
+                    ? "Loading..."
+                    : `Connect to ${network.targetNetwork}`}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </BaseLayout>
+    );
+  }
 
   return (
     <BaseLayout>

@@ -12,7 +12,7 @@
   "dependencies": {
     "@ethersproject/bignumber": "^5.7.0",
     "@headlessui/react": "^1.7.10",
-    "@heroicons/react": "^2.0.15",
+    "@heroicons/react": "^2.0.0",
     "@metamask/providers": "^10.2.1",
     "@next/font": "13.1.6",
     "@openzeppelin/contracts": "^4.8.2",

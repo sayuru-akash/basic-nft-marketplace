@@ -3,6 +3,7 @@ import { Nft } from "@nft_types/nft";
 import { ethers } from "ethers";
 import useSWR from "swr";
 import { useCallback } from "react";
+import { toast } from "react-toastify";
 
 type UseOwnedNftsResponse = {
   listNft: (tokenId: number, price: number) => Promise<void>;
@@ -49,9 +50,11 @@ export const hookFactory: OwnedNftsHookFactory =
               value: ethers.utils.parseEther((0.025).toString()),
             }
           );
-          await tx.wait();
-
-          alert("NFT listed successfully!");
+          await toast.promise(tx!.wait(), {
+            pending: "Processing transaction",
+            success: "NFT has been listed successfully!",
+            error: "Processing error",
+          });
         } catch (e: any) {
           console.error(e.message);
         }
