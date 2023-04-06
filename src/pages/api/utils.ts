@@ -16,6 +16,8 @@ const targetNetwork = process.env.NEXT_PUBLIC_NETWORK_ID as keyof NETWORK;
 
 // @ts-ignore
 export const contractAddress = contract["networks"][targetNetwork]["address"];
+export const pinataApiKey = process.env.PINATA_API_KEY as string;
+export const pinataSecretApiKey = process.env.PINATA_SECRET_API_KEY as string;
 
 export function withSession(handler: any) {
   return withIronSession(handler, {
